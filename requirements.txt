@@ -1,0 +1,11 @@
+pandas
+numpy
+jupyter
+requests
+matplotlib
+scikit-learn
+scipy
+pyfolio
+seaborn
+pytz
+mplfinance
