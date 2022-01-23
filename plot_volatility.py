@@ -35,7 +35,7 @@ df
 mpf.plot(df, volume=True)
 
 #%%
-mpf.plot(df['2021-12-06': '2021-12-07'], type='candle', mav=(200, 100, 50), volume=True)
+mpf.plot(df['2021-12-06': '2021-12-06'], type='candle', mav=(200, 100), volume=True)
 
 
 #%%
@@ -56,8 +56,10 @@ def get_daily_volatility(close, span0=100):
 #%%
 volatility_df = get_daily_volatility(df['close'], span0=150)
 
-#%%
 df['daily_volatility'] = volatility_df
+
+
+#%%
 
 #%%
 ap2 = [
