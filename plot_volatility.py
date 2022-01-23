@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy  as np
 import mplfinance as mpf
+from tqdm import tqdm
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -32,10 +33,9 @@ df
 
 
 #%%
-mpf.plot(df, volume=True)
 
 #%%
-mpf.plot(df['2021-12-06': '2021-12-06'], type='candle', mav=(200, 100), volume=True)
+mpf.plot(df["2021-12-06 06:40":"2021-12-06 13:20"], type='candle', mav=(200, 100), volume=True, style='binance')
 
 
 #%%
@@ -54,7 +54,7 @@ def get_daily_volatility(close, span0=100):
 
 
 #%%
-volatility_df = get_daily_volatility(df['close'], span0=150)
+volatility_df = get_daily_volatility(df['close'], span0=100)
 
 df['daily_volatility'] = volatility_df
 
@@ -63,9 +63,88 @@ df['daily_volatility'] = volatility_df
 
 #%%
 ap2 = [
-    mpf.make_addplot(df["2021-12-06":"2021-12-06"]['daily_volatility'], color='black', panel=2)
+    mpf.make_addplot(df["2021-12-06 06:40":"2021-12-06 13:20"]['daily_volatility'], color='black', panel=1)
     ]
-mpf.plot(df["2021-12-06":"2021-12-06"], type='candle', volume=True, style='binance', addplot=ap2)
+mpf.plot(df["2021-12-06 06:40":"2021-12-06 13:20"], type='candle', title='timebar volatility', volume=False, style='binance', addplot=ap2)
+
+
+#%%
+
+
+#%%
+
+
+#%%
+def volume_bars(df, volume_column, m):
+    t   = df[volume_column]
+    ts  = 0
+    idx = []
+    for i, x in enumerate(tqdm(t)):
+        ts += x
+        if ts >= m:
+            idx.append(i)
+            ts = 0
+            continue
+    return idx
+
+def volume_bar_df(df, volume_column, m):
+    idx = volume_bars(df, volume_column, m)
+    return df.iloc[idx].drop_duplicates()
+
+#%%
+volumebar_df = volume_bar_df(df, 'volume', 50_000)
+
+volumebar_df
+
+#%%
+volumebar_volatility_df = get_daily_volatility(volumebar_df['close'], span0=100)
+volumebar_df['daily_volatility'] = volumebar_volatility_df
+
+
+#%%
+ap2 = [
+    mpf.make_addplot(volumebar_df["2021-12-06 06:40":"2021-12-06 13:20"]['daily_volatility'], color='black', panel=1)
+    ]
+mpf.plot(volumebar_df["2021-12-06 06:40":"2021-12-06 13:20"], type='candle', title='volume bar volatility', volume=False, style='binance', addplot=ap2)
+
+
+#%%
+
+
+#%%
+# time bars
+mpf.plot(df["2021-12-06 10:40":"2021-12-06 12:20"], type='candle', title='time bar', volume=True, style='binance')
+
+#%%
+# volume bars
+mpf.plot(volumebar_df["2021-12-06 10:40":"2021-12-06 12:20"], type='candle', title='volume bar', volume=True, style='binance')
+
+
+#%%
+
+
+#%%
+
+
+#%%
+
+
+#%%
+
+
+#%%
+
+
+#%%
+
+
+#%%
+
+
+#%%
+
+
+#%%
 
 
 #%%
