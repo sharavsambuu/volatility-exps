@@ -127,15 +127,37 @@ mpf.plot(volumebar_df["2021-12-06 10:40":"2021-12-06 12:20"], type='candle', tit
 
 
 #%%
+def dollar_bars(df, dv_column, m):
+    t = df[dv_column]
+    ts = 0
+    idx = []
+    for i, x in enumerate(tqdm(t)):
+        ts += x
+        if ts >= m:
+            idx.append(i)
+            ts = 0
+            continue
+    return idx
+
+def dollar_bar_df(df, dv_column, m):
+    idx = dollar_bars(df, dv_column, m)
+    return df.iloc[idx].drop_duplicates()
 
 
 #%%
+df['dollarvolume'] = df['close']*df['volume']
 
 
 #%%
+dollarbar_df = dollar_bar_df(df, 'dollarvolume', 50_000_000)
 
 
 #%%
+mpf.plot(dollarbar_df["2021-12-06 10:40":"2021-12-06 12:20"], type='candle', title='dollar bar', volume=True, style='binance')
+
+
+#%%
+dollarbar_df.head()
 
 
 #%%
