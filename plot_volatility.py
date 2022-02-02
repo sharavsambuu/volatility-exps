@@ -128,8 +128,8 @@ mpf.plot(volumebar_df["2021-12-06 10:40":"2021-12-06 12:20"], type='candle', tit
 
 #%%
 def dollar_bars(df, dv_column, m):
-    t = df[dv_column]
-    ts = 0
+    t   = df[dv_column]
+    ts  = 0
     idx = []
     for i, x in enumerate(tqdm(t)):
         ts += x
